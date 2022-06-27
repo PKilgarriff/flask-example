@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -10,6 +10,6 @@ def hello_world():
 
 @app.route("/submissions")
 def count_submissions():
-    return {
+    return jsonify({
         "count": 1022
-    }
+    })
