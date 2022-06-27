@@ -42,6 +42,16 @@ def early_education_and_belonging():
     response = {
         "dataset": [
             {
+                "id": "FRA",
+                "data": [
+                    {
+                        "x": 6,
+                        "y": 1.1,
+                        "submissions": 412
+                    }
+                ]
+            },
+            {
                 "id": "GBR",
                 "data": [
                     {
@@ -50,7 +60,67 @@ def early_education_and_belonging():
                         "submissions": 412
                     }
                 ]
-            }
+            },
+            {
+                "id": "ESP",
+                "data": [
+                    {
+                        "x": 6,
+                        "y": 1.1,
+                        "submissions": 412
+                    }
+                ]
+            },
+            {
+                "id": "DOM",
+                "data": [
+                    {
+                        "x": 6,
+                        "y": 1.1,
+                        "submissions": 412
+                    }
+                ]
+            },
+            {
+                "id": "JPN",
+                "data": [
+                    {
+                        "x": 6,
+                        "y": 1.1,
+                        "submissions": 412
+                    }
+                ]
+            },
+            {
+                "id": "UKR",
+                "data": [
+                    {
+                        "x": 6,
+                        "y": 1.1,
+                        "submissions": 412
+                    }
+                ]
+            },
+            {
+                "id": "TUR",
+                "data": [
+                    {
+                        "x": 6,
+                        "y": 1.1,
+                        "submissions": 412
+                    }
+                ]
+            },
+            {
+                "id": "SWE",
+                "data": [
+                    {
+                        "x": 6,
+                        "y": 1.1,
+                        "submissions": 412
+                    }
+                ]
+            },
         ]
     }
     return jsonify(response)
@@ -61,9 +131,37 @@ def economic_social_and_cultural_score():
     response = {
         "dataset": [
             {
+                "id": "FRA",
+                "value": 1.6
+            },
+            {
                 "id": "GBR",
                 "value": 1.6
-            }
+            },
+            {
+                "id": "ESP",
+                "value": 1.6
+            },
+            {
+                "id": "DOM",
+                "value": 1.6
+            },
+            {
+                "id": "JPN",
+                "value": 1.6
+            },
+            {
+                "id": "UKR",
+                "value": 1.6
+            },
+            {
+                "id": "TUR",
+                "value": 1.6
+            },
+            {
+                "id": "SWE",
+                "value": 1.6
+            },
         ]
     }
     return jsonify(response)
@@ -73,6 +171,10 @@ def economic_social_and_cultural_score():
 def learning_hours_per_week():
     response = {
         "dataset": [
+            {
+                "country": "FRA",
+                "hours": 1640
+            },
             {
                 "country": "GBR",
                 "hours": 1640
