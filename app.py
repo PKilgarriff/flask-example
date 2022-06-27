@@ -11,5 +11,5 @@ def hello_world():
 @app.route("/submissions")
 def count_submissions():
     return jsonify({
-        "count": 1022
+        "count": "1022"
     })
