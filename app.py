@@ -10,14 +10,13 @@ def hello_world():
 
 @app.route("/submissions")
 def count_submissions():
-    return jsonify({
-        "count": "1022"
-    })
+    response = {"count": 1022}
+    return jsonify(response)
 
 
 @app.route("/submissions-over-time")
 def submissions_over_time():
-    return jsonify({
+    response = {
         "datasets": [
             {
                 "id": "Submissions",
@@ -32,12 +31,13 @@ def submissions_over_time():
                 ]
             }
         ]
-    })
+    }
+    return jsonify(response)
 
 
 @app.route("/early-education-and-belonging")
 def early_education_and_belonging():
-    return jsonify({
+    response = {
         "dataset": [
             {
                 "id": "GBR",
@@ -50,28 +50,31 @@ def early_education_and_belonging():
                 ]
             }
         ]
-    })
+    }
+    return jsonify(response)
 
 
 @app.route("/economic-social-and-cultural-score")
 def economic_social_and_cultural_score():
-    return jsonify({
+    response = {
         "dataset": [
             {
                 "id": "GBR",
                 "value": 1.6
             }
         ]
-    })
+    }
+    return jsonify(response)
 
 
 @app.route("/learning-hours-per-week")
 def learning_hours_per_week():
-    return jsonify({
+    response = {
         "dataset": [
             {
                 "country": "GBR",
                 "hours": 1640
             }
         ]
-    })
+    }
+    return jsonify(response)
