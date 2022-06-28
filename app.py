@@ -1,7 +1,10 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from db_connector import DatabaseConnection
 
 app = Flask(__name__)
+local_db_conn = DatabaseConnection()
+
 CORS(app)
 
 
@@ -12,25 +15,19 @@ def hello_world():
 
 @app.route("/submissions")
 def count_submissions():
-    response = {"count": 1022}
+    count = local_db_conn.count_rows() or "unknown"
+    response = {"count": count}
     return jsonify(response)
 
 
 @app.route("/submissions-over-time")
 def submissions_over_time():
+    data = local_db_conn.submissions_by_time() or "unknown"
     response = {
         "datasets": [
             {
                 "id": "Submissions",
-                "data": [
-                    {"x": "12:00", "y": 82},
-                    {"x": "13:00", "y": 88},
-                    {"x": "14:00", "y": 101},
-                    {"x": "15:00", "y": 97},
-                    {"x": "16:00", "y": 121},
-                    {"x": "17:00", "y": 83},
-                    {"x": "18:00", "y": 59}
-                ]
+                "data": data
             }
         ]
     }
