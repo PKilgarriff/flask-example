@@ -40,7 +40,7 @@ def submissions_over_time():
 @app.route("/early-education-and-belonging")
 def early_education_and_belonging():
     response = {
-        "dataset": [
+        "datasets": [
             {
                 "id": "FRA",
                 "data": [
@@ -129,7 +129,7 @@ def early_education_and_belonging():
 @app.route("/economic-social-and-cultural-score")
 def economic_social_and_cultural_score():
     response = {
-        "dataset": [
+        "datasets": [
             {
                 "id": "FRA",
                 "value": 1.6
@@ -170,7 +170,7 @@ def economic_social_and_cultural_score():
 @app.route("/learning-hours-per-week")
 def learning_hours_per_week():
     response = {
-        "dataset": [
+        "datasets": [
             {
                 "country": "FRA",
                 "hours": 1640
