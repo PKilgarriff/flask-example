@@ -1,9 +1,9 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from db_connector import DatabaseConnection
+from warehouse_db import DataWarehouse
 
 app = Flask(__name__)
-local_db_conn = DatabaseConnection()
+warehouse = DataWarehouse()
 
 CORS(app)
 
@@ -15,14 +15,14 @@ def hello_world():
 
 @app.route("/submissions")
 def count_submissions():
-    count = local_db_conn.count_rows() or "unknown"
+    count = warehouse.connection.count_rows() or "unknown"
     response = {"count": count}
     return jsonify(response)
 
 
 @app.route("/submissions-over-time")
 def submissions_over_time():
-    data = local_db_conn.submissions_by_time() or "unknown"
+    data = warehouse.connection.submissions_by_time() or "unknown"
     response = {
         "datasets": [
             {
@@ -164,18 +164,30 @@ def economic_social_and_cultural_score():
     return jsonify(response)
 
 
+def execute_query_fetch_all(connection, query):
+    cur = connection.cursor()
+    cur.execute(query)
+    response = cur.fetchall()
+    cur.close()
+    return response
+
+
+def generate_country_learning_hours(warehouse_conn):
+    average_tmins_by_country_query = """SELECT country_code, AVG(class_periods * learning_hours.average_mins)
+                FROM learning_hours
+                GROUP BY country_code;"""
+    return execute_query_fetch_all(warehouse_conn, average_tmins_by_country_query)
+
+
 @app.route("/learning-hours-per-week")
 def learning_hours_per_week():
     response = {
-        "datasets": [
-            {
-                "country": "FRA",
-                "hours": 1640
-            },
-            {
-                "country": "GBR",
-                "hours": 1640
-            }
-        ]
+        "datasets": []
     }
+    sql_response = generate_country_learning_hours(warehouse.connection)
+    for item in sql_response:
+        response["datasets"].append({
+            "country": item[0],
+            "hours": round(item[1], None)
+        })
     return jsonify(response)

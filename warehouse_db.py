@@ -24,6 +24,3 @@ class DataWarehouse:
         except OperationalError as e:
             print(f"The error '{e}' occurred")
         return connection
-
-    def connection(self):
-        return self.connection

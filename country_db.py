@@ -7,6 +7,7 @@ load_dotenv()
 
 # Does this actually need to hold state? Could these just be class methods?
 
+
 class CountryDatabase:
     def __init__(self, country_code):
         self.country_code = country_code
@@ -27,6 +28,3 @@ class CountryDatabase:
         except OperationalError as e:
             print(f"The error '{e}' occurred")
         return connection
-
-    def connection(self):
-        return self.connection
