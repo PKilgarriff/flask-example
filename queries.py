@@ -36,14 +36,14 @@ class Queries:
                     average_mins
                     )
                  VALUES(%s, %s, %s);"""
-        self.insert_many(self, connection, record_list, sql)
+        self.insert_many(connection, record_list, sql)
 
     def insert_submission_times_records(self, connection, record_list):
         sql = """INSERT INTO submission_times(
                     created_at
                     )
                  VALUES(%s);"""
-        self.insert_many(self, connection, record_list, sql)
+        self.insert_many(connection, record_list, sql)
 
     def query_learning_hours_by_country(self, warehouse_conn):
         average_tmins_by_country_query = """SELECT country_code, AVG(class_periods * learning_hours.average_mins)
@@ -54,7 +54,7 @@ class Queries:
 
     def query_submissions_by_hour(self, warehouse_conn):
         count_of_submissions_by_hour_query = """SELECT extract(hour FROM created_at) AS hour, count(id)
-                  FROM responses
+                  FROM submission_times
                   GROUP BY hour
                   ORDER BY hour;"""
         return self.execute_query_fetch_all(warehouse_conn, count_of_submissions_by_hour_query)
@@ -66,8 +66,8 @@ class Queries:
             if (item[0] != 'NA' and item[1] != 'NA')
         ]
 
-    def update_learning_hours_table(self, country_connections, warehouse_conn):
-        for country_code, connection in country_connections:
+    def update_learning_hours_table(self, warehouse_conn, country_connections):
+        for country_code, connection in country_connections.items():
             query_response = self.execute_query_fetch_all(
                 connection, """SELECT st060q01na, st061q01na FROM responses;""")
             learning_time_rows = self.build_learning_hour_record_rows(
@@ -75,10 +75,11 @@ class Queries:
             self.insert_learning_hours_record(
                 warehouse_conn, learning_time_rows)
 
-    def update_submission_times_table(self, country_connections, warehouse_conn):
-        for _, connection in country_connections:
+    def update_submission_times_table(self, warehouse_conn, country_connections):
+        for connection in country_connections.values():
             created_at_rows = self.execute_query_fetch_all(
-                connection, """SELECT id, created_at FROM responses;""")
+                connection, """SELECT created_at FROM responses;""")
+            print(created_at_rows)
             self.insert_submission_times_records(
                 warehouse_conn, created_at_rows)
 
@@ -97,7 +98,7 @@ class Queries:
         sql_response = self.query_submissions_by_hour(warehouse_conn)
         data = []
         for item in sql_response:
-            hour_string = f"{item[0]:02d}:00"
+            hour_string = f"{int(item[0]):02d}:00"
             data.append({
                 "x": hour_string,
                 "y": item[1]
