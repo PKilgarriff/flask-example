@@ -6,7 +6,7 @@ class Queries:
     def __init__(self):
         pass
 
-    def execute_query_fetch_all(self, connection, query):
+    def select_many(self, connection, query):
         try:
             cursor = connection.cursor()
             cursor.execute(query)
@@ -46,22 +46,26 @@ class Queries:
         self.insert_many(connection, record_list, sql)
 
     def query_learning_hours_by_country(self, warehouse_conn):
-        average_tmins_by_country_query = """SELECT country_code, AVG(class_periods * learning_hours.average_mins)
-                  FROM learning_hours
-                  GROUP BY country_code
-                  ORDER BY country_code;"""
-        return self.execute_query_fetch_all(warehouse_conn, average_tmins_by_country_query)
+        average_tmins_by_country_query = """
+            SELECT country_code, AVG(class_periods * average_mins)
+            FROM learning_hours
+            GROUP BY country_code
+            ORDER BY country_code;
+            """
+        return self.select_many(warehouse_conn, average_tmins_by_country_query)
 
     def query_submissions_by_hour(self, warehouse_conn):
-        count_of_submissions_by_hour_query = """SELECT extract(hour FROM created_at) AS hour, count(id)
-                  FROM submission_times
-                  GROUP BY hour
-                  ORDER BY hour;"""
-        return self.execute_query_fetch_all(warehouse_conn, count_of_submissions_by_hour_query)
+        count_of_submissions_by_hour_query = """
+            SELECT extract(hour FROM created_at) AS hour, count(id)
+            FROM submission_times
+            GROUP BY hour
+            ORDER BY hour;
+            """
+        return self.select_many(warehouse_conn, count_of_submissions_by_hour_query)
 
     def query_submissions_count(self, warehouse_conn):
         submissions_count_query = """SELECT count(*) FROM submission_times;"""
-        return self.execute_query_fetch_all(warehouse_conn, submissions_count_query)
+        return self.select_many(warehouse_conn, submissions_count_query)
 
     def build_learning_hour_record_rows(self, country_code, query_output):
         return [
@@ -72,7 +76,7 @@ class Queries:
 
     def update_learning_hours_table(self, warehouse_conn, country_connections):
         for country_code, connection in country_connections.items():
-            query_response = self.execute_query_fetch_all(
+            query_response = self.select_many(
                 connection, """SELECT st060q01na, st061q01na FROM responses;""")
             learning_time_rows = self.build_learning_hour_record_rows(
                 country_code, query_response)
@@ -81,7 +85,7 @@ class Queries:
 
     def update_submission_times_table(self, warehouse_conn, country_connections):
         for connection in country_connections.values():
-            created_at_rows = self.execute_query_fetch_all(
+            created_at_rows = self.select_many(
                 connection, """SELECT created_at FROM responses;""")
             print(created_at_rows)
             self.insert_submission_times_records(
