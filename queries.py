@@ -59,6 +59,10 @@ class Queries:
                   ORDER BY hour;"""
         return self.execute_query_fetch_all(warehouse_conn, count_of_submissions_by_hour_query)
 
+    def query_submissions_count(self, warehouse_conn):
+        submissions_count_query = """SELECT count(*) FROM submission_times;"""
+        return self.execute_query_fetch_all(warehouse_conn, submissions_count_query)
+
     def build_learning_hour_record_rows(self, country_code, query_output):
         return [
             (country_code.upper(), item[0], item[1])
@@ -82,6 +86,10 @@ class Queries:
             print(created_at_rows)
             self.insert_submission_times_records(
                 warehouse_conn, created_at_rows)
+
+    def count_submissions_json(self, warehouse_conn):
+        count = self.query_submissions_count(warehouse_conn)
+        return {"count": sum(count[0])}
 
     def learning_hours_json(self, warehouse_conn, countries):
         sql_response = self.query_learning_hours_by_country(warehouse_conn)

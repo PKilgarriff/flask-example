@@ -17,8 +17,7 @@ def hello_world():
 
 @app.route("/submissions")
 def count_submissions():
-    # count = warehouse.connection.count_rows() or "unknown"
-    response = {"count": 1022}
+    response = queries.count_submissions_json(warehouse.connection)
     return jsonify(response)
 
 
