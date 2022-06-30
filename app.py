@@ -15,14 +15,23 @@ def hello_world():
 
 @app.route("/submissions")
 def count_submissions():
-    count = warehouse.connection.count_rows() or "unknown"
-    response = {"count": count}
+    # count = warehouse.connection.count_rows() or "unknown"
+    response = {"count": 1022}
     return jsonify(response)
 
 
 @app.route("/submissions-over-time")
 def submissions_over_time():
-    data = warehouse.connection.submissions_by_time() or "unknown"
+    # data = warehouse.connection.submissions_by_time() or "unknown"
+    data = [
+        {"x": "12:00", "y": 82},
+        {"x": "13:00", "y": 88},
+        {"x": "14:00", "y": 101},
+        {"x": "15:00", "y": 97},
+        {"x": "16:00", "y": 121},
+        {"x": "17:00", "y": 83},
+        {"x": "18:00", "y": 59}
+    ]
     response = {
         "datasets": [
             {
