@@ -52,6 +52,5 @@ class Queries:
         for connection in country_connections.values():
             created_at_rows = self.select_many(
                 connection, """SELECT created_at FROM responses;""")
-            print(created_at_rows)
             self.insert_submission_times_records(
                 warehouse_conn, created_at_rows)
