@@ -184,7 +184,8 @@ def execute_query_fetch_all(connection, query):
 def generate_country_learning_hours(warehouse_conn):
     average_tmins_by_country_query = """SELECT country_code, AVG(class_periods * learning_hours.average_mins)
                 FROM learning_hours
-                GROUP BY country_code;"""
+                GROUP BY country_code
+                ORDER BY country_code;"""
     return execute_query_fetch_all(warehouse_conn, average_tmins_by_country_query)
 
 
