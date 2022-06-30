@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from warehouse_db import DataWarehouse
 
@@ -190,13 +190,16 @@ def generate_country_learning_hours(warehouse_conn):
 
 @app.route("/learning-hours-per-week")
 def learning_hours_per_week():
+    countries = request.args.get('countries', default=[])
+    print(f"Arguments: {countries}")
     response = {
         "datasets": []
     }
     sql_response = generate_country_learning_hours(warehouse.connection)
     for item in sql_response:
-        response["datasets"].append({
-            "country": item[0],
-            "hours": round(item[1], None)
-        })
+        if len(countries) == 0 or item[0] in countries:
+            response["datasets"].append({
+                "country": item[0],
+                "hours": round(item[1], None)
+            })
     return jsonify(response)
