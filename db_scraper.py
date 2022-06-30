@@ -16,3 +16,5 @@ for country_code in country_codes:
 
 queries.update_submission_times_table(
     warehouse.connection, country_connections)
+queries.update_learning_hours_table(
+    warehouse.connection, country_connections)
