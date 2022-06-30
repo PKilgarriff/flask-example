@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from warehouse_db import DataWarehouse
-from queries import Queries
+from json_builder import JSONBuilder
 
 app = Flask(__name__)
 warehouse = DataWarehouse()
-queries = Queries()
+json_builder = JSONBuilder(warehouse.connection)
 
 CORS(app)
 
@@ -17,13 +17,13 @@ def hello_world():
 
 @app.route("/submissions")
 def count_submissions():
-    response = queries.count_submissions_json(warehouse.connection)
+    response = json_builder.count_submissions()
     return jsonify(response)
 
 
 @app.route("/submissions-over-time")
 def submissions_over_time():
-    response = queries.submissions_by_hour_json(warehouse.connection)
+    response = json_builder.submissions_by_hour()
     return jsonify(response)
 
 
@@ -160,6 +160,5 @@ def economic_social_and_cultural_score():
 @app.route("/learning-hours-per-week")
 def learning_hours_per_week():
     countries = request.args.get('countries', default=[])
-    response = queries.learning_hours_json(
-        warehouse.connection, countries)
+    response = json_builder.learning_hours(countries)
     return jsonify(response)
