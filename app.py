@@ -24,24 +24,7 @@ def count_submissions():
 
 @app.route("/submissions-over-time")
 def submissions_over_time():
-    # data = warehouse.connection.submissions_by_time() or "unknown"
-    data = [
-        {"x": "12:00", "y": 82},
-        {"x": "13:00", "y": 88},
-        {"x": "14:00", "y": 101},
-        {"x": "15:00", "y": 97},
-        {"x": "16:00", "y": 121},
-        {"x": "17:00", "y": 83},
-        {"x": "18:00", "y": 59}
-    ]
-    response = {
-        "datasets": [
-            {
-                "id": "Submissions",
-                "data": data
-            }
-        ]
-    }
+    response = queries.submissions_by_hour_json(warehouse.connection)
     return jsonify(response)
 
 
@@ -178,9 +161,6 @@ def economic_social_and_cultural_score():
 @app.route("/learning-hours-per-week")
 def learning_hours_per_week():
     countries = request.args.get('countries', default=[])
-    response = {
-        "datasets": []
-    }
-    response["datasets"] = queries.learning_hours_json(
+    response = queries.learning_hours_json(
         warehouse.connection, countries)
     return jsonify(response)

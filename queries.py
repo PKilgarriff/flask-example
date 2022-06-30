@@ -18,12 +18,16 @@ class Queries:
             if (cursor != None):
                 cursor.close()
 
-    def build_learning_hour_record_rows(self, country_code, query_output):
-        return [
-            (country_code.upper(), item[0], item[1])
-            for item in query_output
-            if (item[0] != 'NA' and item[1] != 'NA')
-        ]
+    def insert_many(self, connection, record_list, query):
+        try:
+            cursor = connection.cursor()
+            cursor.executemany(query, record_list)
+            connection.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if cursor != None:
+                cursor.close()
 
     def insert_learning_hours_records(self, connection, record_list):
         sql = """INSERT INTO learning_hours(
@@ -32,31 +36,51 @@ class Queries:
                     average_mins
                     )
                  VALUES(%s, %s, %s);"""
-        try:
-            cursor = connection.cursor()
-            cursor.executemany(sql, record_list)
-            connection.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-        finally:
-            if cursor != None:
-                cursor.close()
+        self.insert_many(self, connection, record_list, sql)
+
+    def insert_submission_times_records(self, connection, record_list):
+        sql = """INSERT INTO submission_times(
+                    created_at
+                    )
+                 VALUES(%s);"""
+        self.insert_many(self, connection, record_list, sql)
 
     def query_learning_hours_by_country(self, warehouse_conn):
         average_tmins_by_country_query = """SELECT country_code, AVG(class_periods * learning_hours.average_mins)
-                      FROM learning_hours
-                      GROUP BY country_code
-                      ORDER BY country_code;"""
+                  FROM learning_hours
+                  GROUP BY country_code
+                  ORDER BY country_code;"""
         return self.execute_query_fetch_all(warehouse_conn, average_tmins_by_country_query)
+
+    def query_submissions_by_hour(self, warehouse_conn):
+        count_of_submissions_by_hour_query = """SELECT extract(hour FROM created_at) AS hour, count(id)
+                  FROM responses
+                  GROUP BY hour
+                  ORDER BY hour;"""
+        return self.execute_query_fetch_all(warehouse_conn, count_of_submissions_by_hour_query)
+
+    def build_learning_hour_record_rows(self, country_code, query_output):
+        return [
+            (country_code.upper(), item[0], item[1])
+            for item in query_output
+            if (item[0] != 'NA' and item[1] != 'NA')
+        ]
 
     def update_learning_hours_table(self, country_connections, warehouse_conn):
         for country_code, connection in country_connections:
             query_response = self.execute_query_fetch_all(
-                connection, 'SELECT st060q01na, st061q01na FROM responses')
+                connection, """SELECT st060q01na, st061q01na FROM responses;""")
             learning_time_rows = self.build_learning_hour_record_rows(
                 country_code, query_response)
             self.insert_learning_hours_record(
                 warehouse_conn, learning_time_rows)
+
+    def update_submission_times_table(self, country_connections, warehouse_conn):
+        for _, connection in country_connections:
+            created_at_rows = self.execute_query_fetch_all(
+                connection, """SELECT id, created_at FROM responses;""")
+            self.insert_submission_times_records(
+                warehouse_conn, created_at_rows)
 
     def learning_hours_json(self, warehouse_conn, countries):
         sql_response = self.query_learning_hours_by_country(warehouse_conn)
@@ -67,4 +91,22 @@ class Queries:
                     "country": item[0],
                     "hours": round(item[1], None)
                 })
-        return datasets
+        return {"datasets": datasets}
+
+    def submissions_by_hour_json(self, warehouse_conn):
+        sql_response = self.query_submissions_by_hour(warehouse_conn)
+        data = []
+        for item in sql_response:
+            hour_string = f"{item[0]:02d}:00"
+            data.append({
+                "x": hour_string,
+                "y": item[1]
+            })
+        return {
+            "datasets": [
+                {
+                    "id": "Submissions",
+                    "data": data
+                }
+            ]
+        }
