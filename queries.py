@@ -86,7 +86,6 @@ class Queries:
         st034_qus = [int(item[2]), int(item[3]), int(item[4]),
                      int(item[5]), int(item[6]), int(item[7])]
         st034_avg = sum(st034_qus) / len(st034_qus)
-        print(st034_avg)
         return st034_avg
 
     def update_early_education_and_belonging_table(self, warehouse_conn, country_connections):
