@@ -6,6 +6,8 @@ class Queries:
     def __init__(self):
         pass
 
+# Generic SQL execution methods
+
     def select_many(self, connection, query):
         try:
             cursor = connection.cursor()
@@ -28,6 +30,8 @@ class Queries:
         finally:
             if cursor != None:
                 cursor.close()
+
+# Specific SQL Query method wrappers
 
     def insert_learning_hours_records(self, connection, record_list):
         sql = """INSERT INTO learning_hours(
@@ -54,12 +58,27 @@ class Queries:
                  VALUES(%s, %s, %s);"""
         self.insert_many(connection, record_list, sql)
 
+# Mapping SQL responses to useful data for analysis tables
+
     def build_learning_hour_record_rows(self, country_code, query_output):
         return [
             (country_code.upper(), item[0], item[1])
             for item in query_output
             if (item[0] != 'NA' and item[1] != 'NA')
         ]
+
+    def durecec(self, item):
+        isced0_start = int(item[0])
+        isced1_start = int(item[1])
+        return (isced1_start - isced0_start) + 2
+
+    def belong(self, item):
+        st034_qus = [int(item[2]), int(item[3]), int(item[4]),
+                     int(item[5]), int(item[6]), int(item[7])]
+        st034_avg = sum(st034_qus) / len(st034_qus)
+        return st034_avg
+
+# Methods called from db_scraper script to update each table
 
     def update_learning_hours_table(self, warehouse_conn, country_connections):
         for country_code, connection in country_connections.items():
@@ -76,17 +95,6 @@ class Queries:
                 connection, """SELECT created_at FROM responses;""")
             self.insert_submission_times_records(
                 warehouse_conn, created_at_rows)
-
-    def durecec(self, item):
-        isced0_start = int(item[0])
-        isced1_start = int(item[1])
-        return (isced1_start - isced0_start) + 2
-
-    def belong(self, item):
-        st034_qus = [int(item[2]), int(item[3]), int(item[4]),
-                     int(item[5]), int(item[6]), int(item[7])]
-        st034_avg = sum(st034_qus) / len(st034_qus)
-        return st034_avg
 
     def update_early_education_and_belonging_table(self, warehouse_conn, country_connections):
         for country_code, connection in country_connections.items():
