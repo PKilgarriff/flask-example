@@ -96,8 +96,8 @@ class JSONBuilder:
                     "id": item[0],
                     "data": [
                         {
-                            "x": int(item[1]),
-                            "y": item[2],
+                            "x": round(item[1], None),
+                            "y": round(item[2], 2),
                             "submissions": int(item[3])
                         }
                     ]
@@ -105,39 +105,12 @@ class JSONBuilder:
         return {"datasets": datasets}
 
     def economic_social_and_cultural_score(self, countries):
-        return {
-            "datasets": [
-                {
-                    "id": "FRA",
-                    "value": 1.6
-                },
-                {
-                    "id": "GBR",
-                    "value": 1.6
-                },
-                {
-                    "id": "ESP",
-                    "value": 1.6
-                },
-                {
-                    "id": "DOM",
-                    "value": 1.6
-                },
-                {
-                    "id": "JPN",
-                    "value": 1.6
-                },
-                {
-                    "id": "UKR",
-                    "value": 1.6
-                },
-                {
-                    "id": "TUR",
-                    "value": 1.6
-                },
-                {
-                    "id": "SWE",
-                    "value": 1.6
-                },
-            ]
-        }
+        example_countries = ["FRA", "GBR", "ESP",
+                             "DOM", "JPN", "UKR", "TUR", "SWE"]
+        datasets = []
+        for country in example_countries:
+            datasets.append({
+                "id": country,
+                "value": 2.8
+            })
+        return {"datasets": datasets}
