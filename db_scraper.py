@@ -18,9 +18,9 @@ for country_code in country_codes:
     country_instance = CountryDatabase(country_code)
     country_connections[country_code] = country_instance.connection
 
-queries.update_submission_times_table(
-    warehouse.connection, country_connections)
-queries.update_learning_hours_table(
-    warehouse.connection, country_connections)
+# queries.update_submission_times_table(
+#     warehouse.connection, country_connections)
+# queries.update_learning_hours_table(
+#     warehouse.connection, country_connections)
 queries.update_early_education_and_belonging_table(
     warehouse.connection, country_connections)

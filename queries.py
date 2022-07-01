@@ -68,15 +68,50 @@ class Queries:
         ]
 
     def durecec(self, item):
+        # PISA variable - student years in early care and education
         isced0_start = int(item[0])
         isced1_start = int(item[1])
         return (isced1_start - isced0_start) + 2
 
     def belong(self, item):
-        st034_qus = [int(item[2]), int(item[3]), int(item[4]),
-                     int(item[5]), int(item[6]), int(item[7])]
-        st034_avg = sum(st034_qus) / len(st034_qus)
-        return st034_avg
+        # PISA variable - student sense of belonging at school
+        # ST034Q01TA - Thinking about your school: I feel like an outsider (or left out of things) at school. NEGATIVE
+        q01 = int(item[2])
+        # ST034Q02TA - Thinking about your school: I make friends easily at school. POSITIVE
+        q02 = int(item[3])
+        # ST034Q03TA - Thinking about your school: I feel like I belong at school. POSITIVE
+        q03 = int(item[4])
+        # ST034Q04TA - Thinking about your school: I feel awkward and out of place in my school. NEGATIVE
+        q04 = int(item[5])
+        # ST034Q05TA - Thinking about your school: Other students seem to like me. POSITIVE
+        q05 = int(item[6])
+        # ST034Q06TA - Thinking about your school: I feel lonely at school. NEGATIVE
+        q06 = int(item[7])
+
+        positive_qus = [q02, q03, q05]
+        # positive_feeling = sum(positive_qus)
+        negative_qus = [q01, q04, q06]
+        negative_qus = [response * -1 for response in negative_qus]
+        all_questions = positive_qus + negative_qus
+        sense_of_belonging = sum(all_questions) / len(all_questions)
+        return sense_of_belonging
+
+        # st034_qus = [int(item[2]), int(item[3]), int(item[4]),
+        #              int(item[5]), int(item[6]), int(item[7])]
+        # st034_avg = sum(st034_qus) / len(st034_qus)
+        # return st034_avg
+
+    def pared(item):
+        # PISA variable - parents’ highest level of education
+        pass
+
+    def hisei(item):
+        # PISA variable - parents’ highest occupational status
+        pass
+
+    def homepos(item):
+        # PISA variable - home possessions (including books)
+        pass
 
 # Methods called from db_scraper script to update each table
 
