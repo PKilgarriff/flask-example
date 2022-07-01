@@ -36,42 +36,8 @@ def early_education_and_belonging():
 
 @app.route("/economic-social-and-cultural-score")
 def economic_social_and_cultural_score():
-    response = {
-        "datasets": [
-            {
-                "id": "FRA",
-                "value": 1.6
-            },
-            {
-                "id": "GBR",
-                "value": 1.6
-            },
-            {
-                "id": "ESP",
-                "value": 1.6
-            },
-            {
-                "id": "DOM",
-                "value": 1.6
-            },
-            {
-                "id": "JPN",
-                "value": 1.6
-            },
-            {
-                "id": "UKR",
-                "value": 1.6
-            },
-            {
-                "id": "TUR",
-                "value": 1.6
-            },
-            {
-                "id": "SWE",
-                "value": 1.6
-            },
-        ]
-    }
+    countries = request.args.get('countries', default=[])
+    response = json_builder.economic_social_and_cultural_score(countries)
     return jsonify(response)
 
 

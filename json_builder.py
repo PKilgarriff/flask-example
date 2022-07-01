@@ -83,7 +83,7 @@ class JSONBuilder:
             if len(countries) == 0 or item[0] in countries:
                 datasets.append({
                     "country": item[0],
-                    "hours": round(item[1], None)
+                    "hours": round(item[1] / 60, None)
                 })
         return {"datasets": datasets}
 
@@ -103,3 +103,41 @@ class JSONBuilder:
                     ]
                 })
         return {"datasets": datasets}
+
+    def economic_social_and_cultural_score(self, countries):
+        return {
+            "datasets": [
+                {
+                    "id": "FRA",
+                    "value": 1.6
+                },
+                {
+                    "id": "GBR",
+                    "value": 1.6
+                },
+                {
+                    "id": "ESP",
+                    "value": 1.6
+                },
+                {
+                    "id": "DOM",
+                    "value": 1.6
+                },
+                {
+                    "id": "JPN",
+                    "value": 1.6
+                },
+                {
+                    "id": "UKR",
+                    "value": 1.6
+                },
+                {
+                    "id": "TUR",
+                    "value": 1.6
+                },
+                {
+                    "id": "SWE",
+                    "value": 1.6
+                },
+            ]
+        }
