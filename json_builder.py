@@ -1,4 +1,5 @@
 from psycopg2 import OperationalError
+from random import randrange
 
 
 class JSONBuilder:
@@ -105,12 +106,17 @@ class JSONBuilder:
         return {"datasets": datasets}
 
     def economic_social_and_cultural_score(self, countries):
-        example_countries = ["FRA", "GBR", "ESP",
-                             "DOM", "JPN", "UKR", "TUR", "SWE"]
+        country_codes = [
+            "alb", "arg", "aus", "aut", "bel", "bgr", "bih", "blr", "bra", "brn", "can", "che", "chl", "col", "cri", "cze", "deu", "dnk", "dom", "esp", "est", "fin", "fra", "gbr", "geo", "grc", "hkg", "hrv", "hun", "idn", "irl", "isl", "isr", "ita", "jor", "jpn", "kaz", "kor", "ksv", "lbn", "ltu", "lux", "lva", "mac", "mar", "mda", "mex", "mkd", "mlt", "mne", "mys", "nld", "nor", "nzl", "pan", "per", "phl", "pol", "prt", "qat", "qaz", "qci", "qmr", "qrt", "rou", "rus", "sau", "sgp", "srb", "svk", "svn", "swe", "tap", "tha", "tur", "ukr", "ury", "usa", "vnm"
+        ]
+        all_countries = [country.upper() for country in country_codes]
+        if len(countries) == 0:
+            example_countries = ["FRA", "GBR", "ESP",
+                                 "DOM", "JPN", "UKR", "TUR", "SWE"]
         datasets = []
         for country in example_countries:
             datasets.append({
                 "id": country,
-                "value": 2.8
+                "value": randrange(-80, 40) / 10
             })
         return {"datasets": datasets}
