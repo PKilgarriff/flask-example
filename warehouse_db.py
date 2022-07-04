@@ -1,9 +1,9 @@
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import psycopg2
 from psycopg2 import OperationalError
 
-load_dotenv()
+# load_dotenv()
 
 
 class DataWarehouse:
